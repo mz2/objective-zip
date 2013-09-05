@@ -213,7 +213,8 @@
 	return [[ZipWriteStream alloc] initWithZipFileStruct:_zipFile fileNameInZip:fileNameInZip];
 }
 
-- (NSUInteger) numFilesInZip {
+- (NSUInteger)numFilesInZip
+{
 	if (_mode != ZipFileModeUnzip) {
 		NSString *reason= [NSString stringWithFormat:@"Operation not permitted without Unzip mode"];
 		@throw [[ZipException alloc] initWithReason:reason];
@@ -229,8 +230,9 @@
 	return gi.number_entry;
 }
 
-- (NSArray *) listFileInZipInfos {
-	int num= (uInt)[self numFilesInZip];
+- (NSArray *) listFileInZipInfos
+{
+	int num = (uInt)[self numFilesInZip];
 	if (num < 1)
 		return [[NSArray alloc] init];
 	
