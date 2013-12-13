@@ -65,10 +65,8 @@
                     unz_file_pos pos;
                     int err = unzGetFilePos(_unzFile, &pos);
                     if (err == UNZ_OK && info.name) {
-                        [dic setObject:[NSArray arrayWithObjects:
-                                        [NSNumber numberWithLong:pos.pos_in_zip_directory],
-                                        [NSNumber numberWithLong:pos.num_of_file],
-                                        nil] forKey:info.name];
+                        dic[info.name] = @[[NSNumber numberWithLong:pos.pos_in_zip_directory],
+                                        [NSNumber numberWithLong:pos.num_of_file]];
                     }
                 } while (unzGoToNextFile (_unzFile) != UNZ_END_OF_LIST_OF_FILE);
                 
@@ -293,13 +291,13 @@
 	
 	//int err= unzLocateFile(_unzFile, [fileNameInZip cStringUsingEncoding:NSUTF8StringEncoding], 1);
 	
-    NSArray* info = [contents objectForKey:[fileNameInZip decomposedStringWithCanonicalMapping]];
+    NSArray* info = contents[[fileNameInZip decomposedStringWithCanonicalMapping]];
     
     if (!info) return NO;
     
     unz_file_pos pos;
-    pos.pos_in_zip_directory = [[info objectAtIndex:0] longValue];
-    pos.num_of_file = [[info objectAtIndex:1] longValue];
+    pos.pos_in_zip_directory = [info[0] longValue];
+    pos.num_of_file = [info[1] longValue];
     
     int err = unzGoToFilePos(_unzFile, &pos);
     
@@ -329,7 +327,7 @@
 		@throw [[ZipException alloc] initWithError:err reason:reason];
 	}
 	
-	NSString *name= [[NSString stringWithUTF8String:filename_inzip] decomposedStringWithCanonicalMapping];
+	NSString *name= [@(filename_inzip) decomposedStringWithCanonicalMapping];
     
 	ZipCompressionLevel level= ZipCompressionLevelNone;
 	if (file_info.compression_method != 0) {
@@ -379,7 +377,7 @@
 		@throw [[ZipException alloc] initWithError:err reason:reason];
 	}
 	
-	NSString *fileNameInZip= [NSString stringWithCString:filename_inzip encoding:NSUTF8StringEncoding];
+	NSString *fileNameInZip= @(filename_inzip);
 	
 	err= unzOpenCurrentFilePassword(_unzFile, NULL);
 	if (err != UNZ_OK) {
@@ -405,7 +403,7 @@
 		@throw [[ZipException alloc] initWithError:err reason:reason];
 	}
 	
-	NSString *fileNameInZip= [NSString stringWithCString:filename_inzip encoding:NSUTF8StringEncoding];
+	NSString *fileNameInZip= @(filename_inzip);
 
 	err= unzOpenCurrentFilePassword(_unzFile, [password cStringUsingEncoding:NSUTF8StringEncoding]);
 	if (err != UNZ_OK) {
