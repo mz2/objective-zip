@@ -31,11 +31,22 @@
 //  POSSIBILITY OF SUCH DAMAGE.
 //
 
+#include "zip.h"
+#include "unzip.h"
+
 #import "ZipFile.h"
 #import "ZipException.h"
 #import "ZipReadStream.h"
 #import "ZipWriteStream.h"
 #import "FIleInZipInfo.h"
+
+@interface ZipFile () {
+@private
+zipFile _zipFile;
+unzFile _unzFile;
+}
+
+@end
 
 #define FILE_IN_ZIP_MAX_NAME_LENGTH (512)
 
